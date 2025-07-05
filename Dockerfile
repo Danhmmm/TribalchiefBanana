@@ -1,20 +1,16 @@
-# Dùng Python base image
+# Chọn Python base image
 FROM python:3.10-slim
 
-# Cài đặt một số gói bổ sung cần thiết cho torch
-RUN apt-get update && apt-get install -y \
-    git \
-    && rm -rf /var/lib/apt/lists/*
-
-# Đặt thư mục làm việc
+# Tạo thư mục làm việc
 WORKDIR /app
 
 # Copy requirements & cài đặt
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
+RUN pip install fastapi uvicorn
 
 # Copy toàn bộ code
 COPY . .
 
-# Chạy chương trình
-CMD ["python", "Cloud.py"]
+# Chạy API
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
